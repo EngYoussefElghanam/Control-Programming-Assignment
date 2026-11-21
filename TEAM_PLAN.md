@@ -1,0 +1,12 @@
+# CSE 341 — Team Plan (6 Students)
+
+*Source paths below are inside `src/control_assignment/` unless stated otherwise.*
+
+1. **Student 1 — App and inputs:** Set up dependencies, launcher, main window, shared helpers, data models, validation, and input screens for both parts; build the Routh results screen. **Files:** root config, `app.py`, `__main__.py`, `common/`, `ui/`, `sfg/{models.py,validation.py,ui/input_panel.py}`, `routh/{models.py,validation.py,ui/input_panel.py,ui/results_panel.py}`; validation and GUI smoke tests.
+2. **Student 2 — SFG GUI:** Draw the signal flow graph (nodes, arrows, gains), display all SFG results, connect GUI to algorithms, and capture SFG screenshots. **Files:** `sfg/ui/{graph_canvas.py,results_panel.py}`, `sfg/controller.py`; canvas and SFG integration tests.
+3. **Student 3 — Paths and loops:** Find all forward paths, loops, and 2+/mutually non-touching-loop combinations with gain products. Make SFG test case 1; package the executable/source; record the mandatory narrated 5–10-minute PC demo (code + live runs). **Files:** `sfg/algorithms/{traversal.py,non_touching.py}`, their tests, `tests/fixtures/sfg_case_1.json`, `submission/`.
+4. **Student 4 — Mason's formula:** Calculate Δ, every Δᵢ, and the final transfer gain; show full formulas, numerical steps, and simplification. Make SFG test case 2. **Files:** `sfg/algorithms/{determinant.py,mason.py}`, `sfg/presentation/solution_formatter.py`, their tests, `tests/fixtures/sfg_case_2.json`.
+5. **Student 5 — Routh:** Build the Routh table and calculation steps; classify stability and count RHP poles; calculate numerical poles and verify the count. Connect the GUI; prepare stable/unstable examples and screenshots. **Files:** `routh/algorithms/{table.py,stability.py,poles.py}`, `routh/presentation/solution_formatter.py`, `routh/controller.py`, their tests, `tests/fixtures/routh_*.json`.
+6. **Student 6 — Documentation (no laptop):** Collect all 6 names/IDs, report text, labeled screenshots, and sample results. Write the report, user guide, narration script, and final submission checklist. **Files:** `docs/team_roster.md`, `docs/report/report.md`, `docs/user_guide.md`, `docs/demo_plan.md`, `docs/qa_checklist.md`.
+
+**Everyone with a laptop:** Test and fix their own code. **Everyone:** Send Student 6 their work explanation. **Submit:** Executable, source code, report with two nontrivial SFG cases and stable/unstable Routh cases, plus narrated PC-screen video.
