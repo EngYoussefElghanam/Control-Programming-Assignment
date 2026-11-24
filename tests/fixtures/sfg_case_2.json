@@ -1,0 +1,68 @@
+{
+  "name": "SFG Case 2 - Multi-Path with 3 Mutually Non-Touching Loops",
+  "description": "Nontrivial signal flow graph with 2 forward paths, 4 loops, 4 non-touching pairs, and 1 non-touching triplet.",
+  "nodes": ["R", "X1", "X2", "X3", "X4", "X5", "X6", "C"],
+  "branches": [
+    {"from": "R", "to": "X1", "gain": 1.0, "label": "G0"},
+    {"from": "X1", "to": "X2", "gain": 2.0, "label": "G1"},
+    {"from": "X2", "to": "X3", "gain": 3.0, "label": "G2"},
+    {"from": "X3", "to": "X4", "gain": 1.0, "label": "G3"},
+    {"from": "X4", "to": "C", "gain": 4.0, "label": "G4"},
+    {"from": "X1", "to": "X3", "gain": 5.0, "label": "G5"},
+    {"from": "X2", "to": "X1", "gain": -1.0, "label": "H1"},
+    {"from": "X4", "to": "X3", "gain": -3.0, "label": "H2"},
+    {"from": "X4", "to": "X1", "gain": -0.6666666666666666, "label": "H3"},
+    {"from": "X5", "to": "X6", "gain": 1.0, "label": "G6"},
+    {"from": "X6", "to": "X5", "gain": -1.0, "label": "H4"}
+  ],
+  "forward_paths": [
+    {
+      "id": "M1",
+      "nodes": ["R", "X1", "X2", "X3", "X4", "C"],
+      "branches": ["G0", "G1", "G2", "G3", "G4"],
+      "gain": 24.0
+    },
+    {
+      "id": "M2",
+      "nodes": ["R", "X1", "X3", "X4", "C"],
+      "branches": ["G0", "G5", "G3", "G4"],
+      "gain": 20.0
+    }
+  ],
+  "loops": [
+    {
+      "id": "L1",
+      "nodes": ["X1", "X2", "X1"],
+      "branches": ["G1", "H1"],
+      "gain": -2.0
+    },
+    {
+      "id": "L2",
+      "nodes": ["X3", "X4", "X3"],
+      "branches": ["G3", "H2"],
+      "gain": -3.0
+    },
+    {
+      "id": "L3",
+      "nodes": ["X5", "X6", "X5"],
+      "branches": ["G6", "H4"],
+      "gain": -1.0
+    },
+    {
+      "id": "L4",
+      "nodes": ["X1", "X2", "X3", "X4", "X1"],
+      "branches": ["G1", "G2", "G3", "H3"],
+      "gain": -4.0
+    }
+  ],
+  "expected": {
+    "determinant": 32.0,
+    "cofactors": {
+      "M1": 2.0,
+      "M2": 2.0
+    },
+    "numerator": 88.0,
+    "transfer_gain": 2.75,
+    "transfer_gain_fraction": "11/4"
+  }
+}
