@@ -1,0 +1,375 @@
+{
+  "name": "SFG Case 1 - Multiple Forward Paths, 5 Loops, Non-Touching Pairs and Triplet",
+  "description": "Nontrivial graph with skip branches (G7, G9), a direct branch (G8), overlapping feedback loops and a self-loop (H4).",
+  "input_node": "R",
+  "output_node": "C",
+  "nodes": [
+    "R",
+    "X1",
+    "X2",
+    "X3",
+    "X4",
+    "X5",
+    "C"
+  ],
+  "branches": [
+    {
+      "from": "R",
+      "to": "X1",
+      "gain": 1,
+      "label": "G1"
+    },
+    {
+      "from": "X1",
+      "to": "X2",
+      "gain": 2,
+      "label": "G2"
+    },
+    {
+      "from": "X2",
+      "to": "X3",
+      "gain": 3,
+      "label": "G3"
+    },
+    {
+      "from": "X3",
+      "to": "X4",
+      "gain": 4,
+      "label": "G4"
+    },
+    {
+      "from": "X4",
+      "to": "X5",
+      "gain": 5,
+      "label": "G5"
+    },
+    {
+      "from": "X5",
+      "to": "C",
+      "gain": 1,
+      "label": "G6"
+    },
+    {
+      "from": "X2",
+      "to": "X1",
+      "gain": -1,
+      "label": "H1"
+    },
+    {
+      "from": "X4",
+      "to": "X3",
+      "gain": -2,
+      "label": "H2"
+    },
+    {
+      "from": "X4",
+      "to": "X2",
+      "gain": -0.1,
+      "label": "H3"
+    },
+    {
+      "from": "X5",
+      "to": "X5",
+      "gain": 0.5,
+      "label": "H4"
+    },
+    {
+      "from": "X1",
+      "to": "X4",
+      "gain": 6,
+      "label": "G7"
+    },
+    {
+      "from": "R",
+      "to": "X2",
+      "gain": 2,
+      "label": "G8"
+    },
+    {
+      "from": "X4",
+      "to": "C",
+      "gain": 3,
+      "label": "G9"
+    }
+  ],
+  "forward_paths": [
+    {
+      "id": "M1",
+      "nodes": [
+        "R",
+        "X1",
+        "X2",
+        "X3",
+        "X4",
+        "X5",
+        "C"
+      ],
+      "branches": [
+        "G1",
+        "G2",
+        "G3",
+        "G4",
+        "G5",
+        "G6"
+      ],
+      "gain": 120.0
+    },
+    {
+      "id": "M2",
+      "nodes": [
+        "R",
+        "X1",
+        "X2",
+        "X3",
+        "X4",
+        "C"
+      ],
+      "branches": [
+        "G1",
+        "G2",
+        "G3",
+        "G4",
+        "G9"
+      ],
+      "gain": 72.0
+    },
+    {
+      "id": "M3",
+      "nodes": [
+        "R",
+        "X1",
+        "X4",
+        "X5",
+        "C"
+      ],
+      "branches": [
+        "G1",
+        "G7",
+        "G5",
+        "G6"
+      ],
+      "gain": 30.0
+    },
+    {
+      "id": "M4",
+      "nodes": [
+        "R",
+        "X1",
+        "X4",
+        "C"
+      ],
+      "branches": [
+        "G1",
+        "G7",
+        "G9"
+      ],
+      "gain": 18.0
+    },
+    {
+      "id": "M5",
+      "nodes": [
+        "R",
+        "X2",
+        "X3",
+        "X4",
+        "X5",
+        "C"
+      ],
+      "branches": [
+        "G8",
+        "G3",
+        "G4",
+        "G5",
+        "G6"
+      ],
+      "gain": 120.0
+    },
+    {
+      "id": "M6",
+      "nodes": [
+        "R",
+        "X2",
+        "X3",
+        "X4",
+        "C"
+      ],
+      "branches": [
+        "G8",
+        "G3",
+        "G4",
+        "G9"
+      ],
+      "gain": 72.0
+    },
+    {
+      "id": "M7",
+      "nodes": [
+        "R",
+        "X2",
+        "X1",
+        "X4",
+        "X5",
+        "C"
+      ],
+      "branches": [
+        "G8",
+        "H1",
+        "G7",
+        "G5",
+        "G6"
+      ],
+      "gain": -60.0
+    },
+    {
+      "id": "M8",
+      "nodes": [
+        "R",
+        "X2",
+        "X1",
+        "X4",
+        "C"
+      ],
+      "branches": [
+        "G8",
+        "H1",
+        "G7",
+        "G9"
+      ],
+      "gain": -36.0
+    }
+  ],
+  "loops": [
+    {
+      "id": "L1",
+      "nodes": [
+        "X1",
+        "X2",
+        "X1"
+      ],
+      "branches": [
+        "G2",
+        "H1"
+      ],
+      "gain": -2.0
+    },
+    {
+      "id": "L2",
+      "nodes": [
+        "X1",
+        "X4",
+        "X2",
+        "X1"
+      ],
+      "branches": [
+        "G7",
+        "H3",
+        "H1"
+      ],
+      "gain": 0.6
+    },
+    {
+      "id": "L3",
+      "nodes": [
+        "X2",
+        "X3",
+        "X4",
+        "X2"
+      ],
+      "branches": [
+        "G3",
+        "G4",
+        "H3"
+      ],
+      "gain": -1.2
+    },
+    {
+      "id": "L4",
+      "nodes": [
+        "X3",
+        "X4",
+        "X3"
+      ],
+      "branches": [
+        "G4",
+        "H2"
+      ],
+      "gain": -8.0
+    },
+    {
+      "id": "L5",
+      "nodes": [
+        "X5",
+        "X5"
+      ],
+      "branches": [
+        "H4"
+      ],
+      "gain": 0.5
+    }
+  ],
+  "non_touching": {
+    "2": [
+      {
+        "loops": [
+          "L1",
+          "L4"
+        ],
+        "product": 16.0
+      },
+      {
+        "loops": [
+          "L1",
+          "L5"
+        ],
+        "product": -1.0
+      },
+      {
+        "loops": [
+          "L2",
+          "L5"
+        ],
+        "product": 0.3
+      },
+      {
+        "loops": [
+          "L3",
+          "L5"
+        ],
+        "product": -0.6
+      },
+      {
+        "loops": [
+          "L4",
+          "L5"
+        ],
+        "product": -4.0
+      }
+    ],
+    "3": [
+      {
+        "loops": [
+          "L1",
+          "L4",
+          "L5"
+        ],
+        "product": 8.0
+      }
+    ]
+  },
+  "expected": {
+    "determinant": 13.8,
+    "cofactors": {
+      "M1": 1.0,
+      "M2": 0.5,
+      "M3": 1.0,
+      "M4": 0.5,
+      "M5": 1.0,
+      "M6": 0.5,
+      "M7": 1.0,
+      "M8": 0.5
+    },
+    "numerator": 273.0,
+    "transfer_gain": 19.782608695652176,
+    "transfer_gain_fraction": "455/23"
+  }
+}
