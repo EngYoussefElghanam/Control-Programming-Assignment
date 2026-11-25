@@ -1,0 +1,9 @@
+{
+  "name": "Unstable example (assignment input)",
+  "equation": "s^5 + s^4 + 10s^3 + 72s^2 + 152s + 240 = 0",
+  "coefficients": [1, 1, 10, 72, 152, 240],
+  "expected_first_column": [1, 1, -62, 70.5806, 122.823, 240],
+  "expected_sign_changes": 2,
+  "expected_rhp_poles": 2,
+  "expected_stable": false
+}

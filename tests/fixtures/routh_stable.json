@@ -1,0 +1,9 @@
+{
+  "name": "Stable example: (s+1)(s+2)(s+3)(s+4)(s+5)",
+  "equation": "s^5 + 15s^4 + 85s^3 + 225s^2 + 274s + 120 = 0",
+  "coefficients": [1, 15, 85, 225, 274, 120],
+  "expected_first_column": [1, 15, 70, 168, 216, 120],
+  "expected_sign_changes": 0,
+  "expected_rhp_poles": 0,
+  "expected_stable": true
+}
