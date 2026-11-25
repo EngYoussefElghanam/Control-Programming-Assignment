@@ -3,7 +3,7 @@ from pathlib import Path
 
 import pytest
 
-from control_assignment.routh.controller import solve, solve_from_text
+from control_assignment.routh.controller import solve
 
 FIX = Path(__file__).resolve().parents[1] / "fixtures"
 
@@ -11,8 +11,7 @@ FIX = Path(__file__).resolve().parents[1] / "fixtures"
 @pytest.mark.parametrize("name", ["routh_stable.json", "routh_unstable.json"])
 def test_fixture_pipeline(name):
     case = json.loads((FIX / name).read_text(encoding="utf-8"))
-    r = solve_from_text(case["equation"])
-    assert [float(x) for x in r.table.coefficients] == case["coefficients"]
+    r = solve(case["coefficients"])
     assert [float(x) for x in r.table.first_column] == pytest.approx(case["expected_first_column"], abs=1e-3)
     assert r.stability.sign_changes == case["expected_sign_changes"]
     assert r.stability.rhp_poles == case["expected_rhp_poles"]

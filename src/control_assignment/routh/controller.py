@@ -1,25 +1,24 @@
-"""Routh controller: the single entry point the GUI (Student 1) calls.
+"""Routh controller (Student 5): connects Student 1's panels to the Routh maths.
 
-    from control_assignment.routh.controller import solve, parse_polynomial
-    result = solve([1, 1, 10, 72, 152, 240])
-    result_panel.setHtml(result.html)       # or setPlainText(result.text)
+    result = solve([1, 1, 10, 72, 152, 240])        # pure calculation
+    RouthController(input_panel, results_panel)     # GUI wiring (see class)
 
-Run from a terminal:  python -m control_assignment.routh.controller "s^5+s^4+10s^3+72s^2+152s+240=0"
+Terminal:  python -m control_assignment.routh.controller 1 1 10 72 152 240
 """
 from __future__ import annotations
 
-import re
 import sys
 from dataclasses import dataclass
-from fractions import Fraction
-from typing import List, Sequence
+from typing import Sequence
 
 from .algorithms.poles import (DEFAULT_TOLERANCE, PolesResult, Verification,
                                compute_poles, verify_against_routh)
 from .algorithms.stability import StabilityResult, analyze_stability
-from .algorithms.table import (Number, RouthError, RouthTable, build_routh_table,
-                               to_fraction)
-from .presentation.solution_formatter import format_full_report, format_html
+from ..common.exceptions import ValidationError
+from .algorithms.table import Number, RouthError, RouthTable, build_routh_table
+from .presentation.solution_formatter import (format_complex, format_equation,
+                                               format_full_report, format_html,
+                                               format_steps)
 
 
 @dataclass
@@ -45,56 +44,52 @@ def solve(coefficients: Sequence[Number], tolerance: float = DEFAULT_TOLERANCE) 
     )
 
 
-_SUP = str.maketrans("⁰¹²³⁴⁵⁶⁷⁸⁹", "0123456789")
+class RouthController:
+    """Wires Student 1's RouthInputPanel to RouthResultsPanel.
 
-
-def parse_polynomial(text: str) -> List[Fraction]:
-    """Parse 's^5 + s^4 + 10s^3 + 72s^2 + 152s + 240 = 0' into [1,1,10,72,152,240].
-
-    Powers that do not appear get coefficient 0 (and are then rejected by the
-    Routh validation, as the assignment requires every coefficient).
+    Listens to input_panel.solve_requested (emits a RouthInput), runs solve()
+    and fills the results panel via show_result(...) / show_error(...).
     """
-    s = text.translate(_SUP).replace("−", "-").replace("*", "").replace(" ", "").lower()
-    if "=" in s:
-        left, right = s.split("=", 1)
-        if right not in ("0", "0.0"):
-            raise RouthError("The right-hand side must be 0.")
-        s = left
-    s = re.sub(r"s(\d+)", r"s^\1", s)  # allow s2 as s^2 only if written like "10s2"
-    if not s:
-        raise RouthError("Empty polynomial.")
-    terms = re.findall(r"[+-]?[^+-]+", s)
-    if "".join(terms) != s:
-        raise RouthError("Could not parse the polynomial.")
-    coeffs: dict = {}
-    for t in terms:
-        m = re.fullmatch(r"([+-]?)(\d*\.?\d*)(?:s(?:\^(\d+))?)?", t)
-        if not m or t in ("+", "-"):
-            raise RouthError(f"Could not parse term: {t!r}")
-        sign, num, pw = m.groups()
-        has_s = "s" in t
-        if not has_s:
-            if not num:
-                raise RouthError(f"Could not parse term: {t!r}")
-            power = 0
-        else:
-            power = int(pw) if pw else 1
-        value = to_fraction(num) if num else Fraction(1)
-        if sign == "-":
-            value = -value
-        coeffs[power] = coeffs.get(power, Fraction(0)) + value
-    n = max(coeffs)
-    return [coeffs.get(p, Fraction(0)) for p in range(n, -1, -1)]
 
+    def __init__(self, input_panel, results_panel, tolerance: float = DEFAULT_TOLERANCE):
+        self.input_panel = input_panel
+        self.results_panel = results_panel
+        self.tolerance = tolerance
+        self.last_result = None
+        input_panel.solve_requested.connect(self.on_solve)
 
-def solve_from_text(text: str, tolerance: float = DEFAULT_TOLERANCE) -> RouthResult:
-    return solve(parse_polynomial(text), tolerance)
+    def on_solve(self, data) -> None:
+        try:
+            result = solve(data.coefficients, self.tolerance)
+        except (RouthError, ValidationError) as err:
+            self.last_result = None
+            self.results_panel.show_error(str(err))
+            return
+        self.last_result = result
+        t, st, p, v = result.table, result.stability, result.poles, result.verification
+        rows = [[float(x) for x in row] for row in t.rows]
+        stability_text = (
+            f"{st.classification.upper()}  |  sign changes in first column = {st.sign_changes}"
+            f"  |  RHP poles (Routh) = {st.rhp_poles}")
+        poles_text = (
+            "  ".join(f"p{i}={format_complex(z)}" for i, z in enumerate(p.poles, 1))
+            + f"  |  numerical RHP poles = {p.rhp_count}  |  "
+            + ("agrees with Routh" if v.agrees else "DOES NOT agree with Routh"))
+        steps_text = "\n".join([
+            f"Characteristic equation: {format_equation(t)}", "",
+            format_steps(t), "",
+            st.explanation, v.message])
+        self.results_panel.show_result(rows, stability_text, poles_text, steps_text)
+        table = getattr(self.results_panel, "table", None)
+        if table is not None:                      # label rows s^n ... s^0
+            table.setVerticalHeaderLabels(t.row_labels)
 
 
 if __name__ == "__main__":
-    arg = " ".join(sys.argv[1:]) or "s^5 + s^4 + 10s^3 + 72s^2 + 152s + 240 = 0"
+    from .validation import parse_coefficients
+    arg = " ".join(sys.argv[1:]) or "1 1 10 72 152 240"
     try:
-        print(solve_from_text(arg).text)
-    except RouthError as err:
+        print(solve(parse_coefficients(arg).coefficients).text)
+    except (RouthError, ValidationError) as err:
         print(f"Error: {err}")
         sys.exit(1)

@@ -3,6 +3,7 @@ from PySide6.QtWidgets import QMainWindow, QTabWidget, QWidget, QVBoxLayout
 from ..sfg.ui.input_panel import SFGInputPanel
 from ..routh.ui.input_panel import RouthInputPanel
 from ..routh.ui.results_panel import RouthResultsPanel
+from ..routh.controller import RouthController
 
 
 class MainWindow(QMainWindow):
@@ -14,6 +15,7 @@ class MainWindow(QMainWindow):
         self.sfg_input = SFGInputPanel()
         self.routh_input = RouthInputPanel()
         self.routh_results = RouthResultsPanel()
+        self.routh_controller = RouthController(self.routh_input, self.routh_results)
 
         # Routh tab = input on top, results below
         routh_page = QWidget()
