@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import QMainWindow, QTabWidget, QWidget, QVBoxLayout
 
 from ..sfg.ui.input_panel import SFGInputPanel
+from ..sfg.controller import SFGController
 from ..routh.ui.input_panel import RouthInputPanel
 from ..routh.ui.results_panel import RouthResultsPanel
 from ..routh.controller import RouthController
@@ -25,6 +26,7 @@ class MainWindow(QMainWindow):
 
         # The 2 tabs are the "choice" between the 2 parts
         self.tabs = QTabWidget()
-        self.tabs.addTab(self.sfg_input, "Signal Flow Graph")
+        self.sfg_controller = SFGController(self.sfg_input)
+        self.tabs.addTab(self.sfg_controller, "Signal Flow Graph")
         self.tabs.addTab(routh_page, "Routh Stability")
         self.setCentralWidget(self.tabs)

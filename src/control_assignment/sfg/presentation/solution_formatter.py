@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from fractions import Fraction
 
-from src.control_assignment.sfg.algorithms.determinant import DeterminantResult
-from src.control_assignment.sfg.algorithms.mason import MasonResult
+from ..algorithms.determinant import DeterminantResult
+from ..algorithms.mason import MasonResult
 
 
 def format_number(value: float, frac: Fraction | None = None) -> str:
@@ -99,7 +99,7 @@ def format_mason_solution(result: MasonResult) -> str:
     # Section 1: Forward Paths & Loops summary
     header_lines = ["=== Forward Paths ==="]
     if not result.paths:
-        header_lines.append("No forward paths found (T = 0).")
+        header_lines.append("No forward paths found (numerator = 0).")
     for idx, p in enumerate(result.paths, start=1):
         nodes_str = " -> ".join(map(str, p.nodes))
         gain_str = format_number(p.gain, p.gain_fraction)
@@ -139,7 +139,10 @@ def format_mason_solution(result: MasonResult) -> str:
     final_lines = ["=== Mason's Gain Formula ==="]
     if not result.path_terms:
         final_lines.append("Formula: T = Σ(Mᵢ · Δᵢ) / Δ")
-        final_lines.append("Result : T = 0 (no forward paths from input to output)")
+        if result.is_singular:
+            final_lines.append(f"Result : ERROR — {result.error_message}")
+        else:
+            final_lines.append("Result : T = 0 (no forward paths from input to output)")
         sections.append("\n".join(final_lines))
         return "\n\n".join(sections)
 

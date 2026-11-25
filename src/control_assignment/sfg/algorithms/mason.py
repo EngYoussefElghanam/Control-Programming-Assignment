@@ -6,7 +6,7 @@ from dataclasses import dataclass
 from fractions import Fraction
 from typing import Any, Iterable
 
-from src.control_assignment.sfg.algorithms.determinant import (
+from .determinant import (
     DeterminantResult,
     LoopInfo,
     PathInfo,
